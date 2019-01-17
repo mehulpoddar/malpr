@@ -26,6 +26,16 @@ allprojects {
     repositories {
          maven { url "https://jitpack.io" }
         mavenLocal()
+        mavenCentral()
+        maven {
+            url 'https://maven.google.com'
+        }
+        maven {
+            url "http://dl.bintray.com/steveliles/maven"
+        }
+        maven {
+            url "https://jitpack.io"
+        }
         jcenter()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm

@@ -14,6 +14,7 @@ import {
 import { RNCamera } from 'react-native-camera';
 import RNFetchBlob from 'react-native-fetch-blob';
 import firebase from 'firebase';
+import { RNDocScanner } from 'rn-doc-scanner'
 
 // symbol polyfills
 global.Symbol = require('core-js/es6/symbol');
@@ -26,7 +27,7 @@ require('core-js/fn/array/find');
 
 export default class PlateDetector extends Component{
 
-    state = {clicked:false , imageuri:'', processing:false, plateText:'', flaskurl:''}
+    state = {clicked:false , imageuri:'', processing:false, plateText:'', flaskurl:'',testImage: null}
 
     cleanUrl(url){
 
@@ -42,7 +43,7 @@ export default class PlateDetector extends Component{
         url = this.cleanUrl(url)
         console.log("URLLLLLLLLLLL",url)
         let response = await fetch(
-          'http://192.168.43.174:5000/plate?url='+url
+          'http://192.168.43.111:5000/plate?url='+url
           //'http://192.168.1.7:5000/plate?url=https://i.ibb.co/7RLK4PM/test1.jpg'
         );
         console.log("Banthu")
@@ -54,6 +55,18 @@ export default class PlateDetector extends Component{
       }
     }
 
+    _handleCamera = () => {
+      // argument false means auto document detection
+      // argument true means manual cropping
+      RNDocScanner.getDocumentCrop(true, this.state.imageuri)
+        .then(res => {
+          console.log(res)
+          this.setState({ testImage: res })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
 
     uploadDetails()
     {
@@ -114,7 +127,7 @@ export default class PlateDetector extends Component{
             }}
             style = {styles.preview}
             type={RNCamera.Constants.Type.back}
-            flashMode={RNCamera.Constants.FlashMode.on}
+            flashMode={RNCamera.Constants.FlashMode.off}
             permissionDialogTitle={'Permission to use camera'}
             permissionDialogMessage={'We need your permission to use your camera phone'}
             onGoogleVisionBarcodesDetected={({ barcodes }) => {
@@ -136,7 +149,7 @@ export default class PlateDetector extends Component{
         if(this.state.imageuri!='' && this.state.processing==false)
         {
           return <View>
-          <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.imageuri}} />
+          <Image source={{isStatic:true, uri: this.state.testImage }} style={{width:'100%', height:'85%'}} />
           <View style={{flex: 0, flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
         <TouchableOpacity
             onPress={this.uploadDetails.bind(this)}
