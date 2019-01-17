@@ -15,12 +15,21 @@ import { RNCamera } from 'react-native-camera';
 import RNFetchBlob from 'react-native-fetch-blob';
 import firebase from 'firebase';
 
+// symbol polyfills
+global.Symbol = require('core-js/es6/symbol');
+require('core-js/fn/symbol/iterator');
+
+// collection fn polyfills
+require('core-js/fn/map');
+require('core-js/fn/set');
+require('core-js/fn/array/find');
+
 export default class PlateDetector extends Component{
 
     state = {clicked:false , imageuri:'', processing:false, plateText:'', flaskurl:''}
 
     cleanUrl(url){
-      
+
       url = url.replace('%2F','%252F')
       return url
     }
@@ -33,7 +42,8 @@ export default class PlateDetector extends Component{
         url = this.cleanUrl(url)
         console.log("URLLLLLLLLLLL",url)
         let response = await fetch(
-          'http://192.168.43.100:5000/plate?url='+url
+          'http://192.168.43.174:5000/plate?url='+url
+          //'http://192.168.1.7:5000/plate?url=https://i.ibb.co/7RLK4PM/test1.jpg'
         );
         console.log("Banthu")
         js = await response.json()
@@ -43,7 +53,7 @@ export default class PlateDetector extends Component{
         console.error(error);
       }
     }
-   
+
 
     uploadDetails()
     {
@@ -56,7 +66,7 @@ export default class PlateDetector extends Component{
     return new Promise((resolve, reject) => {
       const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
         let uploadBlob = null
-      const imageRef = firebase.storage().ref('posts').child(imageName)
+      const imageRef = firebase.storage().ref().child(imageName)
         fs.readFile(uploadUri, 'base64')
         .then((data) => {
           return Blob.build(data, { type: `${mime};BASE64` })
@@ -72,7 +82,7 @@ export default class PlateDetector extends Component{
         })
         .then((url) => {
           //firebase.database().ref(`branch/${this.state.branch}/notes/sem_${this.state.sem}/${this.state.subject}`).push().key
-          
+
               //ToastAndroid.show('Processing', ToastAndroid.SHORT);
               console.log(url)
               this.setState({processing:null, flaskurl:url},()=>{
@@ -81,23 +91,23 @@ export default class PlateDetector extends Component{
 
               resolve(url)
             });
-            
-        
-          
+
+
+
         })
-        
+
     }
      ToastAndroid.show('Processing, Please Wait...',ToastAndroid.SHORT)
      //console.log('chapName', this.state.chap+`${this.state.mimeType.split("/")[1]}`)
      g= uploadImage(this.state.imageuri, "Hello2" , ".jpg")
-  
+
     }
 
 
     cameraOrPic(){
       if(!this.state.clicked)
       {
-        return <View style={styles.container}> 
+        return <View style={styles.container}>
         <RNCamera
             ref={ref => {
               this.camera = ref;
@@ -120,7 +130,7 @@ export default class PlateDetector extends Component{
         </TouchableOpacity>
         </View>
         </View>
-        
+
       }
       else{
         if(this.state.imageuri!='' && this.state.processing==false)
@@ -153,11 +163,11 @@ export default class PlateDetector extends Component{
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
           </View>
-          
-          
+
+
         }
         else if(this.state.processing==true)
-        { 
+        {
           return <View>
           <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.imageuri}} />
           <View style={{width:'100%', height:'15%', flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
@@ -166,7 +176,15 @@ export default class PlateDetector extends Component{
       alignSelf: 'center', fontSize:18, color:'#000'}}>Number Plate</Text>
             <Text style={{
       alignSelf: 'center', fontSize:18, color:'#000'}}>{this.state.plateText}</Text>
-            </View>
+            <TouchableOpacity
+              onPress={()=>{this.setState(
+                { clicked: false, imageuri: '', processing: false, plateText: '', flaskurl: '' }
+              )}}
+            >
+            <Text style={{
+      alignSelf: 'center', fontSize:18, color:'blue'}}>Snap Another Plate</Text>
+            </TouchableOpacity>
+        </View>
         </View>
           </View>
         }
@@ -181,7 +199,7 @@ export default class PlateDetector extends Component{
         )
     }
 
-    
+
     takePicture = async function() {
         if (this.camera) {
           const options = { quality: 0.5, base64: true };
@@ -190,7 +208,7 @@ export default class PlateDetector extends Component{
           this.setState({clicked:true, imageuri:data.uri})
         }
       }
-      
+
     }
 
 

@@ -16,12 +16,12 @@ export default class App extends Component{
     // Initialize Firebase
     if (!firebase.apps.length) {
       const config = {
-        apiKey: 'AIzaSyBZYTCnfIfMOB8NE3Kqpnc91VV4US1c-Ug',
-        authDomain: 'dsceapp-5ed7f.firebaseapp.com',
-        databaseURL: 'https://dsceapp-5ed7f.firebaseio.com',
-        projectId: 'dsceapp-5ed7f',
-        storageBucket: 'dsceapp-5ed7f.appspot.com',
-        messagingSenderId: '359041235154',
+        apiKey: "AIzaSyDBa5IOIdomv1I8Fi8LCw9ueSsg2_S_doE",
+        authDomain: "malpr-4c337.firebaseapp.com",
+        databaseURL: "https://malpr-4c337.firebaseio.com",
+        projectId: "malpr-4c337",
+        storageBucket: "malpr-4c337.appspot.com",
+        messagingSenderId: "384049723713"
       };
       firebase.initializeApp(config);
     }
