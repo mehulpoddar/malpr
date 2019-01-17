@@ -182,7 +182,7 @@ export default class PlateDetector extends Component{
         else if(this.state.processing==true)
         {
           return <View>
-          <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.imageuri}} />
+          <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.testImage}} />
           <View style={{width:'100%', height:'15%', flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
           <View style={{flex:1}}>
             <Text style={{
