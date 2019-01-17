@@ -33,7 +33,7 @@ export default class PlateDetector extends Component{
         url = this.cleanUrl(url)
         console.log("URLLLLLLLLLLL",url)
         let response = await fetch(
-          'http://10.0.2.2:5000/plate?url='+url
+          'http://192.168.43.100:5000/plate?url='+url
         );
         console.log("Banthu")
         js = await response.json()
@@ -51,6 +51,7 @@ export default class PlateDetector extends Component{
       const fs = RNFetchBlob.fs
       window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
       window.Blob = Blob
+
     const uploadImage = (uri, imageName, mime = 'image') => {
     return new Promise((resolve, reject) => {
       const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
@@ -85,7 +86,7 @@ export default class PlateDetector extends Component{
           
         })
         
-  }
+    }
      ToastAndroid.show('Processing, Please Wait...',ToastAndroid.SHORT)
      //console.log('chapName', this.state.chap+`${this.state.mimeType.split("/")[1]}`)
      g= uploadImage(this.state.imageuri, "Hello2" , ".jpg")
@@ -133,6 +134,7 @@ export default class PlateDetector extends Component{
         >
             <Text style={{fontSize: 14,color:'#fff'}}> YES </Text>
         </TouchableOpacity>
+
         <TouchableOpacity
             onPress={()=>{this.setState({clicked:false})}}
             style = {styles.capture}
@@ -178,6 +180,8 @@ export default class PlateDetector extends Component{
            </View>
         )
     }
+
+    
     takePicture = async function() {
         if (this.camera) {
           const options = { quality: 0.5, base64: true };
