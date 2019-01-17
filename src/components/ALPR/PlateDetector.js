@@ -43,7 +43,7 @@ export default class PlateDetector extends Component{
         url = this.cleanUrl(url)
         console.log("URLLLLLLLLLLL",url)
         let response = await fetch(
-          'http://192.168.43.111:5000/plate?url='+url
+          'http://192.168.1.7:5000/plate?url='+url
           //'http://192.168.1.7:5000/plate?url=https://i.ibb.co/7RLK4PM/test1.jpg'
         );
         console.log("Banthu")
@@ -112,7 +112,7 @@ export default class PlateDetector extends Component{
     }
      ToastAndroid.show('Processing, Please Wait...',ToastAndroid.SHORT)
      //console.log('chapName', this.state.chap+`${this.state.mimeType.split("/")[1]}`)
-     g= uploadImage(this.state.imageuri, "Hello2" , ".jpg")
+     g= uploadImage(this.state.testImage, "Hello2" , ".jpg")
 
     }
 
@@ -171,7 +171,7 @@ export default class PlateDetector extends Component{
         else if(this.state.processing==null)
         {
           return <View>
-          <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.imageuri}} />
+          <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.testImage}} />
           <View style={{width:'100%', height:'15%', flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
@@ -218,7 +218,10 @@ export default class PlateDetector extends Component{
           const options = { quality: 0.5, base64: true };
           const data = await this.camera.takePictureAsync(options)
           console.log(data.uri);
-          this.setState({clicked:true, imageuri:data.uri})
+
+          this.setState({clicked:true, imageuri:data.uri},()=>{
+            this._handleCamera()
+          })
         }
       }
 
