@@ -14,6 +14,7 @@ import {
 import { RNCamera } from 'react-native-camera';
 import RNFetchBlob from 'react-native-fetch-blob';
 import firebase from 'firebase';
+import CropSelector from 'react-crop-selector';
 
 // symbol polyfills
 global.Symbol = require('core-js/es6/symbol');
@@ -42,8 +43,7 @@ export default class PlateDetector extends Component{
         url = this.cleanUrl(url)
         console.log("URLLLLLLLLLLL",url)
         let response = await fetch(
-          'http://192.168.43.174:5000/plate?url='+url
-          //'http://192.168.1.7:5000/plate?url=https://i.ibb.co/7RLK4PM/test1.jpg'
+          'http://192.168.1.43.111:5000/plate?url='+url
         );
         console.log("Banthu")
         js = await response.json()
@@ -136,6 +136,10 @@ export default class PlateDetector extends Component{
         if(this.state.imageuri!='' && this.state.processing==false)
         {
           return <View>
+          <CropSelector
+            width={640} height={480}
+            x1={5} y1={5} x2={95} y2={95}
+          />
           <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.imageuri}} />
           <View style={{flex: 0, flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
         <TouchableOpacity
