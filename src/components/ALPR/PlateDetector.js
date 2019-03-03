@@ -14,7 +14,7 @@ import {
 import { RNCamera } from 'react-native-camera';
 import RNFetchBlob from 'react-native-fetch-blob';
 import firebase from 'firebase';
-import { RNDocScanner } from 'rn-doc-scanner'
+import { RNDocScanner } from 'rn-doc-scanner';
 
 // symbol polyfills
 global.Symbol = require('core-js/es6/symbol');
@@ -27,11 +27,10 @@ require('core-js/fn/array/find');
 
 export default class PlateDetector extends Component{
 
-    state = {clicked:false , imageuri:'', processing:false, plateText:'', flaskurl:'',testImage: null}
+    state = {clicked:false , imageuri:'', processing:false, plateText:'', flaskurl:'',testImage: null, fillDetails: false};
 
     cleanUrl(url){
-
-      url = url.replace('%2F','%252F')
+      url = url.replace('%2F','%252F');
       return url
     }
 
@@ -146,13 +145,14 @@ export default class PlateDetector extends Component{
 
       }
       else{
-        if(this.state.imageuri!='' && this.state.processing==false)
+        if(this.state.imageuri!='' && this.state.processing==false && this.state.fillDetails==false)
         {
           return <View>
           <Image source={{isStatic:true, uri: this.state.testImage }} style={{width:'100%', height:'85%'}} />
           <View style={{flex: 0, flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
         <TouchableOpacity
-            onPress={this.uploadDetails.bind(this)}
+            onPress={this.setState({ fillDetails: true },()=>{
+              this.uploadDetails.bind(this) })}
             style = {styles.capture}
         >
             <Text style={{fontSize: 14,color:'#fff'}}> YES </Text>
@@ -168,38 +168,39 @@ export default class PlateDetector extends Component{
           </View>
 
         }
-        else if(this.state.processing==null)
+        else if(this.state.fillDetails == true)
         {
-          return <View>
-          <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.testImage}} />
-          <View style={{width:'100%', height:'15%', flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
+          if(this.state.processing==null)
+          {
+            return <View>
+            <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.testImage}} />
+            <View style={{width:'100%', height:'15%', flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
+            <ActivityIndicator size="large" color="#0000ff" />
           </View>
-
-
-        }
-        else if(this.state.processing==true)
-        {
-          return <View>
-          <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.testImage}} />
-          <View style={{width:'100%', height:'15%', flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
-          <View style={{flex:1}}>
-            <Text style={{
-      alignSelf: 'center', fontSize:18, color:'#000'}}>Number Plate</Text>
-            <Text style={{
-      alignSelf: 'center', fontSize:18, color:'#000'}}>{this.state.plateText}</Text>
-            <TouchableOpacity
-              onPress={()=>{this.setState(
-                { clicked: false, imageuri: '', processing: false, plateText: '', flaskurl: '' }
-              )}}
-            >
-            <Text style={{
-      alignSelf: 'center', fontSize:18, color:'blue'}}>Snap Another Plate</Text>
-            </TouchableOpacity>
-        </View>
-        </View>
+            </View>
+          }
+          else if(this.state.processing==true)
+          {
+            return <View>
+            <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.testImage}} />
+            <View style={{width:'100%', height:'15%', flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
+            <View style={{flex:1}}>
+              <Text style={{
+        alignSelf: 'center', fontSize:18, color:'#000'}}>Number Plate</Text>
+              <Text style={{
+        alignSelf: 'center', fontSize:18, color:'#000'}}>{this.state.plateText}</Text>
+              <TouchableOpacity
+                onPress={()=>{this.setState(
+                  { clicked: false, imageuri: '', processing: false, plateText: '', flaskurl: '' }
+                )}}
+              >
+              <Text style={{
+        alignSelf: 'center', fontSize:18, color:'blue'}}>Snap Another Plate</Text>
+              </TouchableOpacity>
           </View>
+          </View>
+            </View>
+          }
         }
       }
     }
