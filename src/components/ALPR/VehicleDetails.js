@@ -1,19 +1,20 @@
 import React, {Component} from 'react';
 import {Button, View, Text, TextInput, ScrollView, TouchableOpacity} from 'react-native';
-import { Dimensions } from 'react-native'
-import InputForm from './InputForm'
+import { Dimensions } from 'react-native';
+import InputForm from './InputForm';
 
 export default class VehicleDetails extends Component{
 
     state = {name:'', contact:'', numPlate:''}
-    screenWidth = 0
-    screenHeight = 0
+    screenWidth = 0;
+    screenHeight = 0;
 
 
     componentWillMount(){
-        this.screenWidth = Dimensions.get('window').width
-        this.screenHeight = Dimensions.get('window').height
+        this.screenWidth = Dimensions.get('window').width;
+        this.screenHeight = Dimensions.get('window').height;
     }
+
     render()
     {
         return(

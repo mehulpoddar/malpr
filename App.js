@@ -10,7 +10,6 @@ import React, {Component} from 'react';
 import {Text, View} from 'react-native';
 import PlateDetector from './src/components/ALPR/PlateDetector';
 import firebase from 'firebase';
-import VehicleDetails from './src/components/ALPR/VehicleDetails';
 
 export default class App extends Component{
   componentWillMount(){
@@ -29,9 +28,13 @@ export default class App extends Component{
   }
   render() {
     return (
-      <View style={{flex:1}}>
-        <View style={{flex:1, borderBottomLeftRadius: 40, borderBottomRightRadius: 40, justifyContent:"center", alignItems:"center", elevation:11,backgroundColor:'#272727', shadowColor:'#000', shadowOffset: {width:2, height:2}, shadowOpacity:0.2}}>
-          <Text style={{fontSize:18, color:'orange'}}>MALPR</Text>
+      <View style={{flex:1, borderBottomLeftRadius: 40, borderBottomRightRadius: 40 }}>
+        <View style={{position: 'absolute', top: '-0.3%', borderColor: 'orange',
+          borderWidth: 2, borderBottomLeftRadius: 40, borderBottomRightRadius: 40,
+          justifyContent:"center", alignItems:"center", elevation:11,
+          backgroundColor:'#272727', shadowColor:'#000', width: '100%',
+          shadowOffset: {width:2, height:2}, shadowOpacity:0.2}}>
+          <Text style={{fontSize:21, color:'orange'}}>MALPR</Text>
         </View>
         <View style={{flex:10}}>
         <PlateDetector />
