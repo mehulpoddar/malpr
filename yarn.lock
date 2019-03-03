@@ -2450,7 +2450,7 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
-"https://github.com/Diastorm/rn-doc-scanner-android.git":
+"https://github.com/Diastorm/rn-doc-scanner-android.git", "rn-doc-scanner@https://github.com/Diastorm/rn-doc-scanner-android.git":
   name rn-doc-scanner
   version "1.0.9"
   resolved "https://github.com/Diastorm/rn-doc-scanner-android.git#50a114e9d6c2dcec1da2fab5515eb98089a95586"
@@ -4309,6 +4309,10 @@ react-native-fetch-blob@^0.10.8:
   dependencies:
     base-64 "0.1.0"
     glob "7.0.6"
+
+react-native-network-info@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-network-info/-/react-native-network-info-4.0.1.tgz#e0242cfec0d9c0e1c6c32b8df596bb4c3223a5a3"
 
 react-native@0.57.0:
   version "0.57.0"

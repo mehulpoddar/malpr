@@ -10,6 +10,7 @@ import React, {Component} from 'react';
 import {Text, View} from 'react-native';
 import PlateDetector from './src/components/ALPR/PlateDetector';
 import firebase from 'firebase';
+import VehicleDetails from './src/components/ALPR/VehicleDetails';
 
 export default class App extends Component{
   componentWillMount(){

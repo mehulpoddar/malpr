@@ -14,7 +14,9 @@ import {
 import { RNCamera } from 'react-native-camera';
 import RNFetchBlob from 'react-native-fetch-blob';
 import firebase from 'firebase';
-import { RNDocScanner } from 'rn-doc-scanner'
+import { RNDocScanner } from 'rn-doc-scanner';
+import { NetworkInfo } from 'react-native-network-info';
+
 
 // symbol polyfills
 global.Symbol = require('core-js/es6/symbol');
@@ -43,7 +45,7 @@ export default class PlateDetector extends Component{
         url = this.cleanUrl(url)
         console.log("URLLLLLLLLLLL",url)
         let response = await fetch(
-          'http://192.168.1.7:5000/plate?url='+url
+          'http://192.168.43.174:5000/plate?url='+url
           //'http://192.168.1.7:5000/plate?url=https://i.ibb.co/7RLK4PM/test1.jpg'
         );
         console.log("Banthu")
@@ -214,7 +216,6 @@ export default class PlateDetector extends Component{
 
 
     takePicture = async function() {
-        if (this.camera) {
           const options = { quality: 0.5, base64: true };
           const data = await this.camera.takePictureAsync(options)
           console.log(data.uri);
@@ -223,7 +224,7 @@ export default class PlateDetector extends Component{
             this._handleCamera()
           })
         }
-      }
+      
 
     }
 
