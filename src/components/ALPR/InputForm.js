@@ -21,7 +21,7 @@ const InputForm = props => {
 };
 const styles = {
   inputStyle: {
-    width: 250,
+    width: '80%',
     height:'100%',
     color: '#000',
     paddingRight: 5,

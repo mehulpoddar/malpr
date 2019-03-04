@@ -30,8 +30,8 @@ export default class App extends Component{
   render() {
     return (
       <View style={{flex:1}}>
-        <View style={{flex:1, borderBottomLeftRadius: 40, borderBottomRightRadius: 40, justifyContent:"center", alignItems:"center", elevation:11,backgroundColor:'#272727', shadowColor:'#000', shadowOffset: {width:2, height:2}, shadowOpacity:0.2}}>
-          <Text style={{fontSize:18, color:'orange'}}>MALPR</Text>
+        <View style={{flex:1, justifyContent:"center", alignItems:"center", elevation:11,backgroundColor:'#fff', shadowColor:'#000', shadowOffset: {width:2, height:2}, shadowOpacity:0.2}}>
+          <Text style={{fontSize:18, color:'#000'}}>MALPR</Text>
         </View>
         <View style={{flex:10}}>
         <PlateDetector />

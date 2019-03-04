@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, View, Text, TextInput, ScrollView, TouchableOpacity} from 'react-native';
+import {Button, View, Text, TextInput, ScrollView, TouchableOpacity, Image} from 'react-native';
 import { Dimensions } from 'react-native'
 import InputForm from './InputForm'
 
@@ -50,6 +50,18 @@ export default class VehicleDetails extends Component{
                     </TouchableOpacity>
                 </View>
 
+                <View style={{ marginTop:20}}>
+                    <TouchableOpacity >
+                        <Image source={require('../../Resources/shutter_new.png')} style={{width:50, height:50, tintColor:'orange'}} />
+                    </TouchableOpacity>
+                </View>
+
+                <View style={{ marginTop:20}}>
+                    <TouchableOpacity >
+                        <Image source={require('../../Resources/shutter_new.png')} style={{width:50, height:50, tintColor:'orange'}} />
+                    </TouchableOpacity>
+                </View>
+                
             </ScrollView>
             </View>
         )

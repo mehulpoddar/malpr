@@ -223,12 +223,10 @@ export default class PlateDetector extends Component{
             this._handleCamera()
           })
         }
-      
-
     }
 
 
-
+    
 const styles = StyleSheet.create({
     container: {
       flex: 1,
