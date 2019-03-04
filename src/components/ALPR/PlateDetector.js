@@ -9,12 +9,15 @@ import {
   Image,
   ToastAndroid,
   Platform,
-  ActivityIndicator
+  ScrollView,
+  ActivityIndicator,
+  StatusBar
 } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import RNFetchBlob from 'react-native-fetch-blob';
 import firebase from 'firebase';
 import { RNDocScanner } from 'rn-doc-scanner';
+import InputForm from './InputForm';
 
 // symbol polyfills
 global.Symbol = require('core-js/es6/symbol');
@@ -27,13 +30,22 @@ require('core-js/fn/array/find');
 
 export default class PlateDetector extends Component{
 
-    state = {clicked:false , imageuri:'', processing:false, plateText:'', flaskurl:'',testImage: null, fillDetails: false};
+    state = {name: '', contact: '', numPlate: '', clicked: false ,
+    imageuri: '', processing: false, plateText: '', flaskurl: '',
+    testImage: null, fillDetails: false, Notif: 'Loading...'};
+
+    screenWidth = 0;
+    screenHeight = 0;
+
+    componentWillMount() {
+        this.screenWidth = Dimensions.get('window').width;
+        this.screenHeight = Dimensions.get('window').height;
+    }
 
     cleanUrl(url){
       url = url.replace('%2F','%252F');
       return url
     }
-
 
     async getNumPlate() {
       console.log("processing")
@@ -60,7 +72,8 @@ export default class PlateDetector extends Component{
       RNDocScanner.getDocumentCrop(true, this.state.imageuri)
         .then(res => {
           console.log(res)
-          this.setState({ testImage: res })
+          this.setState({ testImage: res, fillDetails: true }, ()=>{
+            this.uploadDetails.bind(this) })
         })
         .catch(err => {
           console.log(err)
@@ -133,74 +146,76 @@ export default class PlateDetector extends Component{
               console.log(barcodes)
             }}
         />
-        <View style={{flex: 0, flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
+        <View style={{ position: 'absolute', left: '80%', height: '100%', width: '20%', justifyContent: 'center', alignItems: 'center' }}>
         <TouchableOpacity
-            onPress={this.takePicture.bind(this)}
-            style = {styles.capture}
+          onPress={this.takePicture.bind(this)}
+          style = {{ height: '20%', width: '50%' }}
         >
-            <Text style={{fontSize: 14,color:'#fff'}}> SNAP </Text>
+            <Image source={require('../../resources/shutter.png')} style={{ height: '100%', width: '100%' }}/>
         </TouchableOpacity>
         </View>
         </View>
 
       }
       else{
-        if(this.state.imageuri!='' && this.state.processing==false && this.state.fillDetails==false)
-        {
-          return <View>
-          <Image source={{isStatic:true, uri: this.state.testImage }} style={{width:'100%', height:'85%'}} />
-          <View style={{flex: 0, flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
-        <TouchableOpacity
-            onPress={this.setState({ fillDetails: true },()=>{
-              this.uploadDetails.bind(this) })}
-            style = {styles.capture}
-        >
-            <Text style={{fontSize: 14,color:'#fff'}}> YES </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-            onPress={()=>{this.setState({clicked:false})}}
-            style = {styles.capture}
-        >
-            <Text style={{fontSize: 14,color:'#fff'}}> NO </Text>
-        </TouchableOpacity>
-        </View>
-          </View>
-
-        }
-        else if(this.state.fillDetails == true)
+        if(this.state.imageuri!='' && this.state.processing==false && this.state.fillDetails == true)
         {
           if(this.state.processing==null)
           {
-            return <View>
-            <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.testImage}} />
-            <View style={{width:'100%', height:'15%', flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
-            <ActivityIndicator size="large" color="#0000ff" />
-          </View>
-            </View>
+            this.setState({ Notif: 'Reading Plate: Please Wait...' });
           }
           else if(this.state.processing==true)
           {
-            return <View>
-            <Image style={{width:'100%', height:'85%'}} source={{isStatic:true, uri:this.state.testImage}} />
-            <View style={{width:'100%', height:'15%', flexDirection: 'row', justifyContent: 'center',backgroundColor:'#fff'}}>
-            <View style={{flex:1}}>
-              <Text style={{
-        alignSelf: 'center', fontSize:18, color:'#000'}}>Number Plate</Text>
-              <Text style={{
-        alignSelf: 'center', fontSize:18, color:'#000'}}>{this.state.plateText}</Text>
-              <TouchableOpacity
-                onPress={()=>{this.setState(
-                  { clicked: false, imageuri: '', processing: false, plateText: '', flaskurl: '' }
-                )}}
-              >
-              <Text style={{
-        alignSelf: 'center', fontSize:18, color:'blue'}}>Snap Another Plate</Text>
-              </TouchableOpacity>
-          </View>
-          </View>
-            </View>
+            if (this.state.plateText === "Try Again!")
+              this.setState({ Notif: 'Failure: Unable to Read Plate' });
+            else
+              this.setState({ Notif: 'Success: Plate Read', numPlate: this.state.plateText });
           }
+          return (
+            <View style={{height:'100%', backgroundColor:'#EEEEEE'}}>
+            <ScrollView contentContainerStyle={{alignItems:'center', marginTop: 30, backgroundColor:'#EEEEEE'}} style={{flex:1}}>
+                <View style={{alignItems:'center', width:'80%', marginTop:10}}>
+                    <InputForm
+                        onChangeText={name => this.setState({ name: name })}
+                        value={this.state.name}
+                        label="Name"
+                    />
+                </View>
+
+                <View style={{alignItems:'center', width:'80%', marginTop:10}}>
+                    <InputForm
+                        onChangeText={contact => this.setState({ contact: contact })}
+                        value={this.state.contact}
+                        label="Contact"
+                    />
+                </View>
+
+                <View style={{alignItems:'center', width:'80%', marginTop:10}}>
+                    <InputForm
+                        onChangeText={numPlate => this.setState({ numPlate: numPlate })}
+                        value={this.state.numPlate}
+                        label="Plate"
+                    />
+                    <Text style={{alignSelf:'flex-start', fontSize:18, marginTop:10, marginLeft: 115}}>
+                    {this.state.Notif}
+                    </Text>
+                </View>
+
+                <View style={{ justifyContent:'center', marginTop:10, borderRadius:25, width:'100%', alignItems:'center'}}>
+                    <TouchableOpacity
+                    onPress={()=>{this.setState(
+                      { clicked: false, imageuri: '', processing: false, plateText: '', flaskurl: '',
+                        Notif: 'Loading...', fillDetails: false, name: '', contact: '', numPlate: '' }
+                    )}}
+                      style={{alignItems:'center',justifyContent:'center', width:'20%', height:this.screenHeight/9, backgroundColor:'#272727', borderRadius:25}}
+                    >
+                        <Text style={{color:'orange', fontSize:19}}>Submit</Text>
+                    </TouchableOpacity>
+                </View>
+
+            </ScrollView>
+            </View>
+          );
         }
       }
     }
@@ -208,6 +223,7 @@ export default class PlateDetector extends Component{
     render(){
         return(
             <View style={styles.container}>
+            <StatusBar hidden />
             {this.cameraOrPic()}
            </View>
         )
@@ -223,6 +239,8 @@ export default class PlateDetector extends Component{
             this._handleCamera()
           })
         }
+
+
     }
 
 

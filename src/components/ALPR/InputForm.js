@@ -15,7 +15,7 @@ const InputForm = props => {
         value={props.value}
         onChangeText={props.onChangeText}
         multiline = {props.multiline}
-      /> 
+      />
     </View>
   );
 };
@@ -33,15 +33,15 @@ const styles = {
     padding: 5,
     color:'#272727',
     borderRadius:20,
-    backgroundColor: '#F57C00',
+    backgroundColor: 'orange',
   },
   containerStyle2: {
     width:100,
-    backgroundColor: '#F57C00',
+    backgroundColor: 'orange',
     alignItems: 'center',
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
-    borderColor: '#F57C00',
+    borderColor: 'orange',
     justifyContent:'center'
   },
   containerStyle: {
@@ -61,4 +61,4 @@ const styles = {
   },
 };
 
-export default InputForm 
+export default InputForm
