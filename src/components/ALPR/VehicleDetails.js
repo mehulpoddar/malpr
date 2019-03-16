@@ -51,6 +51,18 @@ export default class VehicleDetails extends Component{
                     </TouchableOpacity>
                 </View>
 
+                <View style={{ marginTop:20}}>
+                    <TouchableOpacity >
+                        <Image source={require('../../Resources/shutter_new.png')} style={{width:50, height:50, tintColor:'orange'}} />
+                    </TouchableOpacity>
+                </View>
+
+                <View style={{ marginTop:20}}>
+                    <TouchableOpacity >
+                        <Image source={require('../../Resources/shutter_new.png')} style={{width:50, height:50, tintColor:'orange'}} />
+                    </TouchableOpacity>
+                </View>
+                
             </ScrollView>
             </View>
         )
