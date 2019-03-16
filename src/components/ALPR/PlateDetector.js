@@ -10,8 +10,7 @@ import {
   ToastAndroid,
   Platform,
   ScrollView,
-  ActivityIndicator,
-  StatusBar
+  ActivityIndicator
 } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import RNFetchBlob from 'react-native-fetch-blob';
@@ -32,7 +31,8 @@ export default class PlateDetector extends Component{
 
     state = {name: '', contact: '', numPlate: '', clicked: false ,
     imageuri: '', processing: false, plateText: '', flaskurl: '',
-    testImage: null, fillDetails: false, Notif: 'Loading...', driveruri:'', licenseuri:'',driverClicked:false, licenseCliced:false};
+    testImage: null, fillDetails: false, Notif: 'Loading...',
+    driveruri:'', licenseuri:'', clickingFor: 'plate'};
 
     screenWidth = 0;
     screenHeight = 0;
@@ -69,15 +69,20 @@ export default class PlateDetector extends Component{
     _handleCamera = () => {
       // argument false means auto document detection
       // argument true means manual cropping
-      RNDocScanner.getDocumentCrop(true, this.state.imageuri)
-        .then(res => {
-          console.log(res)
-          this.setState({ testImage: res, fillDetails: true }, ()=>{
-            this.uploadDetails.bind(this) })
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      if(this.state.clickingFor === 'driver' || this.state.clickingFor === 'license')
+        this.setState({ fillDetails: true }, ()=>{
+          this.uploadDetails.bind(this) });
+      else {
+        RNDocScanner.getDocumentCrop(true, this.state.imageuri)
+          .then(res => {
+            console.log(res)
+            this.setState({ testImage: res, fillDetails: true }, ()=>{
+              this.uploadDetails.bind(this) })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        }
       }
 
     uploadDetails()
@@ -131,19 +136,19 @@ export default class PlateDetector extends Component{
 
     takeDriverPic()
     {
-      if(this.state.driverClicked)
+      if(this.state.driveruri !== '')
       {
         return <View style={{width:'100%', height:'100%', borderRadius:20, elevation:6, alignItems:'center', justifyContent:'center'}}>
-          <Image source={{uri:this.state.imageuri}} style={{width:'80%', height:'80%'}} />
+          <Image source={{uri:this.state.driveruri}} style={{width:'80%', height:'80%'}} />
         </View>
       }
       else
       {
         return <TouchableOpacity style={{width:'100%', height:'100%', borderRadius:20, elevation:6, alignItems:'center', justifyContent:'center'}} onPress={()=>{
-          this.setState({driverClicked:true}
+          this.setState({clicked: false, clickingFor: 'driver'}
           )
         }}>
-          <Image source={require('../../Resources/pic.png')} style={{width:'40%', height:'60%',scaleX:1.4, scaleY:1.4}} />
+          <Image source={require('../../resources/pic.png')} style={{width:'40%', height:'60%',scaleX:1.4, scaleY:1.4}} />
                         <Text style={{fontSize:17, color:'black'}}>Upload Driver's Image</Text>
         </TouchableOpacity>
       }
@@ -151,20 +156,20 @@ export default class PlateDetector extends Component{
 
     takeLicensePic()
     {
-      if(this.state.licenseCliced)
+      if(this.state.licenseuri !== '')
       {
         return <View style={{width:'100%', height:'100%', borderRadius:20, elevation:6, alignItems:'center', justifyContent:'center'}}>
-          <Image source={{uri:this.state.imageuri}} style={{width:'80%', height:'80%'}} />
+          <Image source={{uri:this.state.licenseuri}} style={{width:'80%', height:'80%'}} />
         </View>
       }
       else
       {
         return <TouchableOpacity style={{width:'100%', height:'100%', borderRadius:20, elevation:6, alignItems:'center', justifyContent:'center'}} onPress={()=>{
-          this.setState({licenseCliced:true}
+          this.setState({clicked: false, clickingFor: 'license'}
           )
         }}>
-          <Image source={require('../../Resources/pic.png')} style={{width:'40%', height:'60%',scaleX:1.4, scaleY:1.4}} />
-                        <Text style={{fontSize:17, color:'black'}}>Upload Driver's Image</Text>
+          <Image source={require('../../resources/pic.png')} style={{width:'40%', height:'60%',scaleX:1.4, scaleY:1.4}} />
+                        <Text style={{fontSize:17, color:'black'}}>Upload License's Image</Text>
         </TouchableOpacity>
       }
     }
@@ -189,7 +194,7 @@ export default class PlateDetector extends Component{
           onPress={this.takePicture.bind(this)}
           style = {{ height: '20%', width: '50%', zIndex: 10 }}
         >
-            <Image source={require('../../Resources/record.png')} style={{ height: '100%', width: '100%' }}/>
+            <Image source={require('../../resources/record.png')} style={{ height: '100%', width: '100%' }}/>
         </TouchableOpacity>
         </View>
         <View style={{ backgroundColor: 'black', width: '100%', top: '0%', position: 'absolute'}}/>
@@ -239,7 +244,7 @@ export default class PlateDetector extends Component{
                 </View>
                 <View  style={{width:this.screenHeight/1.5, height:this.screenWidth/4}}>
                 {this.takeLicensePic()}
-                </View> 
+                </View>
                 </View>
                 <View style={{alignItems:'center', width:'80%', marginTop:10}}>
                     <InputForm
@@ -272,7 +277,8 @@ export default class PlateDetector extends Component{
                     <TouchableOpacity
                     onPress={()=>{this.setState(
                       { clicked: false, imageuri: '', processing: false, plateText: '', flaskurl: '',
-                        Notif: 'Loading...', fillDetails: false, name: '', contact: '', numPlate: '' }
+                        Notif: 'Loading...', fillDetails: false, name: '', contact: '', numPlate: '',
+                        driveruri:'', licenseuri:'', clickingFor: 'plate' }
                     )}}
                       style={{alignItems:'center',justifyContent:'center', width:'20%', height:this.screenHeight/9, backgroundColor:'#272727', borderRadius:25}}
                     >
@@ -299,9 +305,18 @@ export default class PlateDetector extends Component{
           const options = { quality: 0.5, base64: true };
           const data = await this.camera.takePictureAsync(options)
 
-          this.setState({clicked:true, imageuri:data.uri},()=>{
-            this._handleCamera()
-          })
+          if(this.state.clickingFor === 'plate')
+            this.setState({clicked:true, imageuri:data.uri},()=>{
+              this._handleCamera()
+            });
+          else if(this.state.clickingFor === 'driver')
+            this.setState({clicked:true, driveruri:data.uri},()=>{
+              this._handleCamera()
+            });
+          else if(this.state.clickingFor === 'license')
+            this.setState({clicked:true, licenseuri:data.uri},()=>{
+              this._handleCamera()
+            });
         }
     }
 

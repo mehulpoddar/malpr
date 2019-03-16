@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Text, View, Image} from 'react-native';
+import {Text, View, Image, StatusBar} from 'react-native';
 import PlateDetector from './src/components/ALPR/PlateDetector';
 import firebase from 'firebase';
 
@@ -35,6 +35,7 @@ export default class App extends Component{
    if (this.state.splash) {
      return (
           <View style={{ flex: 1, backgroundColor: '#272727', justifyContent: 'center', alignItems: 'center' }} >
+            <StatusBar hidden />
             <View style={{ borderRadius: 100, backgroundColor: 'orange', height: '40%', width: '20%', justifyContent: 'center', alignItems: 'center' }} >
               <Text style={{ fontSize: 20, fontWeight: 'bold' }}>MALPR</Text>
             </View>
@@ -44,6 +45,7 @@ export default class App extends Component{
    }
    return (
      <View style={{flex:1}}>
+       <StatusBar hidden />
        <PlateDetector />
      </View>
    );
