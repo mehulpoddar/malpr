@@ -131,15 +131,36 @@ export default class PlateDetector extends Component{
 
     takeDriverPic()
     {
-      if(!this.state.driveruri=='')
+      if(this.state.driverClicked)
       {
-        return <Text>dsd</Text>
+        return <View style={{width:'100%', height:'100%', borderRadius:20, elevation:6, alignItems:'center', justifyContent:'center'}}>
+          <Image source={{uri:this.state.imageuri}} style={{width:'80%', height:'80%'}} />
+        </View>
       }
       else
       {
         return <TouchableOpacity style={{width:'100%', height:'100%', borderRadius:20, elevation:6, alignItems:'center', justifyContent:'center'}} onPress={()=>{
-          this.setState({driverClicked:true},
-            this.takePicture.bind(this)
+          this.setState({driverClicked:true}
+          )
+        }}>
+          <Image source={require('../../Resources/pic.png')} style={{width:'40%', height:'60%',scaleX:1.4, scaleY:1.4}} />
+                        <Text style={{fontSize:17, color:'black'}}>Upload Driver's Image</Text>
+        </TouchableOpacity>
+      }
+    }
+
+    takeLicensePic()
+    {
+      if(this.state.licenseCliced)
+      {
+        return <View style={{width:'100%', height:'100%', borderRadius:20, elevation:6, alignItems:'center', justifyContent:'center'}}>
+          <Image source={{uri:this.state.imageuri}} style={{width:'80%', height:'80%'}} />
+        </View>
+      }
+      else
+      {
+        return <TouchableOpacity style={{width:'100%', height:'100%', borderRadius:20, elevation:6, alignItems:'center', justifyContent:'center'}} onPress={()=>{
+          this.setState({licenseCliced:true}
           )
         }}>
           <Image source={require('../../Resources/pic.png')} style={{width:'40%', height:'60%',scaleX:1.4, scaleY:1.4}} />
@@ -168,7 +189,7 @@ export default class PlateDetector extends Component{
           onPress={this.takePicture.bind(this)}
           style = {{ height: '20%', width: '50%', zIndex: 10 }}
         >
-            <Image source={require('../../resources/shutter_new.png')} style={{ height: '100%', width: '100%' }}/>
+            <Image source={require('../../Resources/record.png')} style={{ height: '100%', width: '100%' }}/>
         </TouchableOpacity>
         </View>
         <View style={{ backgroundColor: 'black', width: '100%', top: '0%', position: 'absolute'}}/>
@@ -186,8 +207,8 @@ export default class PlateDetector extends Component{
             }}
         />
         </View>
-
       }
+
       else{
         if(this.state.imageuri!='' && this.state.processing==false && this.state.fillDetails == true)
         {
@@ -217,10 +238,7 @@ export default class PlateDetector extends Component{
                   {this.takeDriverPic()}
                 </View>
                 <View  style={{width:this.screenHeight/1.5, height:this.screenWidth/4}}>
-                    <TouchableOpacity style={{width:'100%', height:'100%', borderRadius:20, elevation:6, alignItems:'center', justifyContent:'center'}}>
-                        <Image source={require('../../Resources/pic.png')} style={{width:'40%', height:'60%',scaleX:1.4, scaleY:1.4}} />
-                        <Text style={{fontSize:17, color:'black'}}>Upload License Image</Text>
-                    </TouchableOpacity>
+                {this.takeLicensePic()}
                 </View> 
                 </View>
                 <View style={{alignItems:'center', width:'80%', marginTop:10}}>
@@ -280,11 +298,6 @@ export default class PlateDetector extends Component{
     takePicture = async function() {
           const options = { quality: 0.5, base64: true };
           const data = await this.camera.takePictureAsync(options)
-
-          if(this.state.driverClicked)
-          {
-            this.setState({driverClicked:false, driveruri:data.uri})
-          }
 
           this.setState({clicked:true, imageuri:data.uri},()=>{
             this._handleCamera()
