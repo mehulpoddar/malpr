@@ -7,13 +7,17 @@
  */
 
 import React, {Component} from 'react';
-import {Text, View} from 'react-native';
+import {Text, View, Image} from 'react-native';
 import PlateDetector from './src/components/ALPR/PlateDetector';
 import firebase from 'firebase';
 
 export default class App extends Component{
+
+  state = { splash: true };
+
   componentWillMount(){
     // Initialize Firebase
+    setTimeout(() => this.setState({ splash: false }), 3000);
     if (!firebase.apps.length) {
       const config = {
         apiKey: "AIzaSyDBa5IOIdomv1I8Fi8LCw9ueSsg2_S_doE",
@@ -26,13 +30,22 @@ export default class App extends Component{
       firebase.initializeApp(config);
     }
   }
+
   render() {
-    return (
-      <View style={{flex:1}}>
-        <View style={{flex:10}}>
-        <PlateDetector />
-        </View>
-      </View>
-    );
-  }
+   if (this.state.splash) {
+     return (
+          <View style={{ flex: 1, backgroundColor: '#272727', justifyContent: 'center', alignItems: 'center' }} >
+            <View style={{ borderRadius: 100, backgroundColor: 'orange', height: '40%', width: '20%', justifyContent: 'center', alignItems: 'center' }} >
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>MALPR</Text>
+            </View>
+          </View>
+         //<Image source={require('./src/resources/splash.png')} style={{ flex: 1 }} />
+     );
+   }
+   return (
+     <View style={{flex:1}}>
+       <PlateDetector />
+     </View>
+   );
+ }
 }

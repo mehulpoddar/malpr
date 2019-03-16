@@ -133,13 +133,13 @@ export default class PlateDetector extends Component{
       if(!this.state.clicked)
       {
         return <View style={styles.container}>
-        <View style={{position: 'absolute', left: '-0.5%', borderColor: 'black',
-          borderWidth: 1, elevation:11, width: '8%', borderBottomRightRadius: 80,
+        <View style={{position: 'absolute', left: '-0.5%', borderColor: 'orange',
+          borderWidth: 2, elevation:11, width: '8%', borderBottomRightRadius: 80,
           backgroundColor:'#27272780', shadowColor:'#000', borderTopRightRadius: 80,
           height: '100%', shadowOffset: {width:2, height:2}, shadowOpacity:0.2 }}>
         </View>
-        <View style={{ position: 'absolute', right: '-0.5%', borderColor: 'black',
-          borderWidth: 1, borderBottomLeftRadius: 180, elevation:11, width: '13%',
+        <View style={{ position: 'absolute', right: '-0.5%', borderColor: 'orange',
+          borderWidth: 2, borderBottomLeftRadius: 180, elevation:11, width: '13%',
           backgroundColor:'#27272780', shadowColor:'#000', borderTopLeftRadius: 180,
           height: '100%', shadowOffset: {width:2, height:2}, shadowOpacity:0.2}}>
         </View>
@@ -148,7 +148,7 @@ export default class PlateDetector extends Component{
           onPress={this.takePicture.bind(this)}
           style = {{ height: '20%', width: '50%', zIndex: 10 }}
         >
-            <Image source={require('../../resources/shutter.png')} style={{ height: '100%', width: '100%' }}/>
+            <Image source={require('../../resources/shutter_new.png')} style={{ height: '100%', width: '100%' }}/>
         </TouchableOpacity>
         </View>
         <View style={{ backgroundColor: 'black', width: '100%', top: '0%', position: 'absolute'}}/>
@@ -262,7 +262,7 @@ export default class PlateDetector extends Component{
     }
 
 
-    
+
 const styles = StyleSheet.create({
     container: {
       flex: 1,
