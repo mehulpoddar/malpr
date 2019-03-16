@@ -32,7 +32,7 @@ export default class PlateDetector extends Component{
 
     state = {name: '', contact: '', numPlate: '', clicked: false ,
     imageuri: '', processing: false, plateText: '', flaskurl: '',
-    testImage: null, fillDetails: false, Notif: 'Loading...'};
+    testImage: null, fillDetails: false, Notif: 'Loading...', driveruri:'', licenseuri:'',driverClicked:false, licenseCliced:false};
 
     screenWidth = 0;
     screenHeight = 0;
@@ -129,6 +129,26 @@ export default class PlateDetector extends Component{
     }
 
 
+    takeDriverPic()
+    {
+      if(!this.state.driveruri=='')
+      {
+        return <Text>dsd</Text>
+      }
+      else
+      {
+        return <TouchableOpacity style={{width:'100%', height:'100%', borderRadius:20, elevation:6, alignItems:'center', justifyContent:'center'}} onPress={()=>{
+          this.setState({driverClicked:true},
+            this.takePicture.bind(this)
+          )
+        }}>
+          <Image source={require('../../Resources/pic.png')} style={{width:'40%', height:'60%',scaleX:1.4, scaleY:1.4}} />
+                        <Text style={{fontSize:17, color:'black'}}>Upload Driver's Image</Text>
+        </TouchableOpacity>
+      }
+    }
+
+
     cameraOrPic(){
       if(!this.state.clicked)
       {
@@ -151,7 +171,7 @@ export default class PlateDetector extends Component{
           onPress={this.takePicture.bind(this)}
           style = {{ height: '20%', width: '50%' }}
         >
-            <Image source={require('../../resources/shutter.png')} style={{ height: '100%', width: '100%' }}/>
+            <Image source={require('../../Resources/record.png')} style={{ height: this.screenHeight/6, width: '100%', tintColor:'white' }}/>
         </TouchableOpacity>
         </View>
         </View>
@@ -174,6 +194,17 @@ export default class PlateDetector extends Component{
           return (
             <View style={{height:'100%', backgroundColor:'#EEEEEE'}}>
             <ScrollView contentContainerStyle={{alignItems:'center', marginTop: 30, backgroundColor:'#EEEEEE'}} style={{flex:1}}>
+            <View style={{flexDirection:'row', justifyContent:'space-between', width:'85%', marginTop:10, marginBottom:15}}>
+            <View  style={{width:this.screenHeight/1.5, height:this.screenWidth/4}}>
+                  {this.takeDriverPic()}
+                </View>
+                <View  style={{width:this.screenHeight/1.5, height:this.screenWidth/4}}>
+                    <TouchableOpacity style={{width:'100%', height:'100%', borderRadius:20, elevation:6, alignItems:'center', justifyContent:'center'}}>
+                        <Image source={require('../../Resources/pic.png')} style={{width:'40%', height:'60%',scaleX:1.4, scaleY:1.4}} />
+                        <Text style={{fontSize:17, color:'black'}}>Upload License Image</Text>
+                    </TouchableOpacity>
+                </View> 
+                </View>
                 <View style={{alignItems:'center', width:'80%', marginTop:10}}>
                     <InputForm
                         onChangeText={name => this.setState({ name: name })}
@@ -212,7 +243,6 @@ export default class PlateDetector extends Component{
                         <Text style={{color:'orange', fontSize:19}}>Submit</Text>
                     </TouchableOpacity>
                 </View>
-
             </ScrollView>
             </View>
           );
@@ -223,7 +253,6 @@ export default class PlateDetector extends Component{
     render(){
         return(
             <View style={styles.container}>
-            <StatusBar hidden />
             {this.cameraOrPic()}
            </View>
         )
@@ -233,14 +262,16 @@ export default class PlateDetector extends Component{
     takePicture = async function() {
           const options = { quality: 0.5, base64: true };
           const data = await this.camera.takePictureAsync(options)
-          console.log(data.uri);
+
+          if(this.state.driverClicked)
+          {
+            this.setState({driverClicked:false, driveruri:data.uri})
+          }
 
           this.setState({clicked:true, imageuri:data.uri},()=>{
             this._handleCamera()
           })
         }
-
-
     }
 
 
