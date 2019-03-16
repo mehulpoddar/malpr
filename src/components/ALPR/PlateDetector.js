@@ -153,6 +153,25 @@ export default class PlateDetector extends Component{
       if(!this.state.clicked)
       {
         return <View style={styles.container}>
+        <View style={{position: 'absolute', left: '-0.5%', borderColor: 'orange',
+          borderWidth: 2, elevation:11, width: '8%', borderBottomRightRadius: 80,
+          backgroundColor:'#27272780', shadowColor:'#000', borderTopRightRadius: 80,
+          height: '100%', shadowOffset: {width:2, height:2}, shadowOpacity:0.2 }}>
+        </View>
+        <View style={{ position: 'absolute', right: '-0.5%', borderColor: 'orange',
+          borderWidth: 2, borderBottomLeftRadius: 180, elevation:11, width: '13%',
+          backgroundColor:'#27272780', shadowColor:'#000', borderTopLeftRadius: 180,
+          height: '100%', shadowOffset: {width:2, height:2}, shadowOpacity:0.2}}>
+        </View>
+        <View style={{ position: 'absolute', left: '84%', height: '100%', width: '20%', justifyContent: 'center', alignItems: 'center' }}>
+        <TouchableOpacity
+          onPress={this.takePicture.bind(this)}
+          style = {{ height: '20%', width: '50%', zIndex: 10 }}
+        >
+            <Image source={require('../../resources/shutter_new.png')} style={{ height: '100%', width: '100%' }}/>
+        </TouchableOpacity>
+        </View>
+        <View style={{ backgroundColor: 'black', width: '100%', top: '0%', position: 'absolute'}}/>
         <RNCamera
             ref={ref => {
               this.camera = ref;
@@ -166,14 +185,6 @@ export default class PlateDetector extends Component{
               console.log(barcodes)
             }}
         />
-        <View style={{ position: 'absolute', left: '80%', height: '100%', width: '20%', justifyContent: 'center', alignItems: 'center' }}>
-        <TouchableOpacity
-          onPress={this.takePicture.bind(this)}
-          style = {{ height: '20%', width: '50%' }}
-        >
-            <Image source={require('../../Resources/record.png')} style={{ height: this.screenHeight/6, width: '100%', tintColor:'white' }}/>
-        </TouchableOpacity>
-        </View>
         </View>
 
       }
@@ -193,6 +204,13 @@ export default class PlateDetector extends Component{
           }
           return (
             <View style={{height:'100%', backgroundColor:'#EEEEEE'}}>
+            <View style={{position: 'absolute', top: '-0.3%', borderColor: 'orange',
+              borderWidth: 2, borderBottomLeftRadius: 40, borderBottomRightRadius: 40,
+              justifyContent:"center", alignItems:"center", elevation:11,
+              backgroundColor:'#272727', shadowColor:'#000', width: '100%',
+              shadowOffset: {width:2, height:2}, shadowOpacity:0.2}}>
+              <Text style={{fontSize:21, color:'orange'}}>MALPR</Text>
+            </View>
             <ScrollView contentContainerStyle={{alignItems:'center', marginTop: 30, backgroundColor:'#EEEEEE'}} style={{flex:1}}>
             <View style={{flexDirection:'row', justifyContent:'space-between', width:'85%', marginTop:10, marginBottom:15}}>
             <View  style={{width:this.screenHeight/1.5, height:this.screenWidth/4}}>
@@ -275,7 +293,7 @@ export default class PlateDetector extends Component{
     }
 
 
-    
+
 const styles = StyleSheet.create({
     container: {
       flex: 1,
