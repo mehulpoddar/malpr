@@ -66,25 +66,6 @@ export default class PlateDetector extends Component{
       }
     }
 
-    _handleCamera = () => {
-      // argument false means auto document detection
-      // argument true means manual cropping
-      if(this.state.clickingFor === 'driver' || this.state.clickingFor === 'license')
-        this.setState({ fillDetails: true }, ()=>{
-          this.uploadDetails.bind(this) });
-      else {
-        RNDocScanner.getDocumentCrop(true, this.state.imageuri)
-          .then(res => {
-            console.log(res)
-            this.setState({ testImage: res, fillDetails: true }, ()=>{
-              this.uploadDetails.bind(this) })
-          })
-          .catch(err => {
-            console.log(err)
-          })
-        }
-      }
-
     uploadDetails()
     {
       const Blob = RNFetchBlob.polyfill.Blob
@@ -96,6 +77,7 @@ export default class PlateDetector extends Component{
     return new Promise((resolve, reject) => {
       const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
         let uploadBlob = null
+        console.log("Uploading!!!");
       const imageRef = firebase.storage().ref().child(imageName)
         fs.readFile(uploadUri, 'base64')
         .then((data) => {
@@ -127,11 +109,35 @@ export default class PlateDetector extends Component{
         })
 
     }
+      console.log("Before..")
      ToastAndroid.show('Processing, Please Wait...',ToastAndroid.SHORT)
      //console.log('chapName', this.state.chap+`${this.state.mimeType.split("/")[1]}`)
      g= uploadImage(this.state.testImage, "Hello2" , ".jpg")
 
     }
+
+    _handleCamera = () => {
+      // argument false means auto document detection
+      // argument true means manual cropping
+      if(this.state.clickingFor === 'driver' || this.state.clickingFor === 'license')
+        this.setState({ fillDetails: true }, ()=>{
+          console.log("Before upload")
+          this.uploadDetails() });
+      else {
+        RNDocScanner.getDocumentCrop(true, this.state.imageuri)
+          .then(res => {
+            console.log(res)
+            this.setState({ testImage: res, fillDetails: true }, ()=>{
+              console.log("Before upload")
+              this.uploadDetails() })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        }
+      }
+
+
 
 
     takeDriverPic()
@@ -215,18 +221,18 @@ export default class PlateDetector extends Component{
       }
 
       else{
-        if(this.state.imageuri!='' && this.state.processing==false && this.state.fillDetails == true)
+        if(this.state.imageuri!=''  && this.state.fillDetails == true)
         {
           if(this.state.processing==null)
           {
-            this.setState({ Notif: 'Reading Plate: Please Wait...' });
+            this.setState({ Notif: 'Reading Plate: Please Wait...', processing: 'temp'});
           }
           else if(this.state.processing==true)
           {
             if (this.state.plateText === "Try Again!")
-              this.setState({ Notif: 'Failure: Unable to Read Plate' });
+              this.setState({ Notif: 'Failure: Unable to Read Plate', processing: 'temp'});
             else
-              this.setState({ Notif: 'Success: Plate Read', numPlate: this.state.plateText });
+              this.setState({ Notif: 'Success: Plate Read', numPlate: this.state.plateText, processing: 'temp'});
           }
           return (
             <View style={{height:'100%', backgroundColor:'#EEEEEE'}}>
@@ -273,7 +279,7 @@ export default class PlateDetector extends Component{
                     </Text>
                 </View>
 
-                <View style={{ justifyContent:'center', marginTop:10, borderRadius:25, width:'100%', alignItems:'center'}}>
+                <View style={{ justifyContent:'center', marginTop:10, borderRadius:25, width:'100%', alignItems:'center', marginBottom:50}}>
                     <TouchableOpacity
                     onPress={()=>{this.setState(
                       { clicked: false, imageuri: '', processing: false, plateText: '', flaskurl: '',
@@ -293,6 +299,7 @@ export default class PlateDetector extends Component{
     }
 
     render(){
+      console.log(this.state)
         return(
             <View style={styles.container}>
             {this.cameraOrPic()}
